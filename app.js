@@ -1,7 +1,13 @@
 const express = require("express");
 const app = express();
 
-const { loadUsers, addUser } = require("./utils");
+const {
+  loadUsers,
+  addUser,
+  depositCash,
+  updateCredit,
+  withdraw,
+} = require("./utils");
 app.use(express.json());
 
 //
@@ -21,22 +27,33 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
-// app.put("/users/withdraw/:id", (req, res) => {});
-
-// app.put("/users/deposit/:id", (req, res) => {});
-
-// app.put("/users/transfer/:id", (req, res) => {});
-
-app.put("/users/:id", (res, req) => {
-  //withdraw
-  // deposit
-  // update credit
-  // transfer
-});
-
 app.post("/users/", (req, res) => {
   try {
     res.status(201).send(addUser(req.body));
+  } catch (e) {
+    res.status(400).send({ error: e.message });
+  }
+});
+
+app.post("/deposit/:id", (req, res) => {
+  try {
+    res.status(201).send(depositCash(req.params.id, req.body));
+  } catch (e) {
+    res.status(400).send({ error: e.message });
+  }
+});
+
+app.post("/withdraw/:id/", (req, res) => {
+  try {
+    res.status(201).send(withdraw(req.params.id, req.body));
+  } catch (e) {
+    res.status(400).send({ error: e.message });
+  }
+});
+
+app.post("/update/:id/", (req, res) => {
+  try {
+    res.status(201).send(updateCredit(req.params.id, req.body));
   } catch (e) {
     res.status(400).send({ error: e.message });
   }
