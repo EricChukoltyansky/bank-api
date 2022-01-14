@@ -118,7 +118,7 @@ const withdraw = (id, withdrawAmount) => {
   }
 };
 
-withdrawValid = ({ id, cash, credit }, { withdraw }) => {
+const withdrawValid = ({ id, cash, credit }, { withdraw }) => {
   if (cash + credit < withdraw) {
     throw new Error("There is no sufficient funds");
   }
@@ -130,6 +130,29 @@ withdrawValid = ({ id, cash, credit }, { withdraw }) => {
     credit += cash;
   }
   return { id, credit, cash };
+};
+
+const transfer = (id1, id2, transferAmount) => {
+  try {
+    loadUsers(id1);
+    console.log(id1);
+    loadUsers(id2);
+    console.log(id2);
+    const users = loadUsers();
+    const updatedData = users.map((account) => {
+      if (account.id === +id2) {
+        return {
+          id,
+          cash: account.cash + Number(transferAmount),
+        };
+      }
+    });
+    saveUsers(updatedData);
+
+    return users;
+  } catch (e) {
+    return e.message;
+  }
 };
 
 const validateInputs = (body) => {
@@ -157,4 +180,5 @@ module.exports = {
   depositCash,
   updateCredit,
   withdraw,
+  transfer,
 };

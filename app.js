@@ -7,6 +7,7 @@ const {
   depositCash,
   updateCredit,
   withdraw,
+  transfer,
 } = require("./utils");
 app.use(express.json());
 
@@ -54,6 +55,18 @@ app.post("/withdraw/:id/", (req, res) => {
 app.post("/update/:id/", (req, res) => {
   try {
     res.status(201).send(updateCredit(req.params.id, req.body));
+  } catch (e) {
+    res.status(400).send({ error: e.message });
+  }
+});
+
+app.post("/transfer/:senderId/:recieverId/:amount", (req, res) => {
+  try {
+    res
+      .status(201)
+      .send(
+        transfer(req.params.senderId, req.params.recieverId, req.params.amount)
+      );
   } catch (e) {
     res.status(400).send({ error: e.message });
   }
