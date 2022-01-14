@@ -1,24 +1,20 @@
 const fs = require("fs");
 
 const loadUsers = (id = undefined) => {
-  try {
-    // console.log("id", id);
-    const dataBuffer = fs.readFileSync("./db/users.json");
-    const dataJSON = dataBuffer.toString();
-    const users = JSON.parse(dataJSON);
-    if (!id) {
-      return users;
-    } else {
-      const result = users.find((user) => {
-        return user.id === +id;
-      });
-      if (!result) {
-        throw Error(`No such user with that id: ${id} `);
-      }
-      return result;
+  // console.log("id", id);
+  const dataBuffer = fs.readFileSync("./db/users.json");
+  const dataJSON = dataBuffer.toString();
+  const users = JSON.parse(dataJSON);
+  if (!id) {
+    return users;
+  } else {
+    const result = users.find((user) => {
+      return user.id === +id;
+    });
+    if (!result) {
+      throw Error(`No such user with that id: ${id} `);
     }
-  } catch (e) {
-    return e ? e.message : [];
+    return result;
   }
 };
 
@@ -32,7 +28,7 @@ const addUser = (body) => {
       }
     });
     obj = {
-      id: body.id || 0,
+      id: "id" + Math.random().toString(16).slice(2) || 0,
       credit: body.credit || 0,
       cash: body.cash || 0,
     };
@@ -69,6 +65,7 @@ const depositCash = (id, newAmount) => {
     });
     console.log("updatedUser", updatedUser);
     saveUsers(updatedUser);
+    return loadUsers();
   } catch (e) {
     return e.message;
   }
@@ -93,6 +90,7 @@ const updateCredit = (id, newAmount) => {
     });
     console.log("updatedUser", updatedUser);
     saveUsers(updatedUser);
+    return loadUsers();
   } catch (e) {
     return e.message;
   }
@@ -120,15 +118,19 @@ const withdraw = (id, withdrawAmount) => {
 
 const withdrawValid = ({ id, cash, credit }, { withdraw }) => {
   if (cash + credit < withdraw) {
-    throw new Error("There is no sufficient funds");
+    throw new Error("There is non sufficient funds");
   }
 
+  let tempCash = cash;
+
   if (cash > 0) {
-    cash -= withdraw;
+    tempCash -= withdraw;
   }
-  if (cash <= 0 && credit > 0) {
+
+  if (cash === 0 && credit > 0) {
     credit -= withdraw;
   }
+  cash = tempCash;
   return { id, credit, cash };
 };
 
@@ -157,7 +159,8 @@ const transfer = (id1, id2, transferAmount) => {
     });
 
     saveUsers(updatedData);
-    return users;
+
+    return loadUsers();
   } catch (e) {
     return e.message;
   }
