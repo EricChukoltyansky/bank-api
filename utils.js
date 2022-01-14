@@ -77,7 +77,7 @@ const depositCash = (id, newAmount) => {
 const updateCredit = (id, newAmount) => {
   try {
     const user = loadUsers(id);
-    // console.log("user", user);
+
     console.log("newAmount", newAmount);
     const users = loadUsers();
 
@@ -127,28 +127,36 @@ const withdrawValid = ({ id, cash, credit }, { withdraw }) => {
     cash -= withdraw;
   }
   if (cash <= 0 && credit > 0) {
-    credit += cash;
+    credit -= withdraw;
   }
   return { id, credit, cash };
 };
 
 const transfer = (id1, id2, transferAmount) => {
   try {
-    loadUsers(id1);
-    console.log(id1);
-    loadUsers(id2);
-    console.log(id2);
+    const user1 = loadUsers(id1);
+    console.log(user1);
+    const user2 = loadUsers(id2);
+    console.log(user2);
+    console.log(transferAmount);
     const users = loadUsers();
     const updatedData = users.map((account) => {
+      if (account.id === +id1) {
+        return withdrawValid(user1, transferAmount);
+      }
       if (account.id === +id2) {
+        console.log("account cash", account.cash);
+        console.log("transfer Amount", transferAmount.withdraw);
         return {
-          id,
-          cash: account.cash + Number(transferAmount),
+          id: account.id,
+          cash: Number(account.cash) + Number(transferAmount.withdraw),
+          credit: account.credit,
         };
       }
+      return account;
     });
-    saveUsers(updatedData);
 
+    saveUsers(updatedData);
     return users;
   } catch (e) {
     return e.message;

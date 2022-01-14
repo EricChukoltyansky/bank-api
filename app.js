@@ -60,13 +60,11 @@ app.post("/update/:id/", (req, res) => {
   }
 });
 
-app.post("/transfer/:senderId/:recieverId/:amount", (req, res) => {
+app.post("/transfer/:senderId/:recieverId", (req, res) => {
   try {
     res
       .status(201)
-      .send(
-        transfer(req.params.senderId, req.params.recieverId, req.params.amount)
-      );
+      .send(transfer(req.params.senderId, req.params.recieverId, req.body));
   } catch (e) {
     res.status(400).send({ error: e.message });
   }
