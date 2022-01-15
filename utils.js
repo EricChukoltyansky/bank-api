@@ -1,20 +1,23 @@
 const fs = require("fs");
 
 const loadUsers = (id = undefined) => {
-  // console.log("id", id);
-  const dataBuffer = fs.readFileSync("./db/users.json");
-  const dataJSON = dataBuffer.toString();
-  const users = JSON.parse(dataJSON);
-  if (!id) {
-    return users;
-  } else {
-    const result = users.find((user) => {
-      return user.id === +id;
-    });
-    if (!result) {
-      throw Error(`No such user with that id: ${id} `);
+  try {
+    const dataBuffer = fs.readFileSync("./db/users.json");
+    const dataJSON = dataBuffer.toString();
+    const users = JSON.parse(dataJSON);
+    if (!id) {
+      return users;
+    } else {
+      const result = users.find((user) => {
+        return user.id === +id;
+      });
+      if (!result) {
+        throw Error(`No such user with that id: ${id} `);
+      }
+      return result;
     }
-    return result;
+  } catch (e) {
+    return e.message === "Unexpected end of JSON input" ? [] : e.message;
   }
 };
 
@@ -28,13 +31,14 @@ const addUser = (body) => {
       }
     });
     obj = {
-      id: "id" + Math.random().toString(16).slice(2) || 0,
+      id: body.id,
       credit: body.credit || 0,
       cash: body.cash || 0,
     };
     users.push(validateInputs(obj));
     saveUsers(users);
-    return stringToJson("new-client", body);
+
+    return loadUsers();
   } catch (e) {
     return e.message;
   }
@@ -147,8 +151,6 @@ const transfer = (id1, id2, transferAmount) => {
         return withdrawValid(user1, transferAmount);
       }
       if (account.id === +id2) {
-        console.log("account cash", account.cash);
-        console.log("transfer Amount", transferAmount.withdraw);
         return {
           id: account.id,
           cash: Number(account.cash) + Number(transferAmount.withdraw),
