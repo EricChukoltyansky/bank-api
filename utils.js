@@ -168,6 +168,10 @@ const transfer = (id1, id2, transferAmount) => {
   }
 };
 
+const filterUsers = () => {
+  loadUsers().sort((a, b) => b.cash - a.cash);
+};
+
 const validateInputs = (body) => {
   if (
     typeof body.credit !== "number" ||
@@ -194,4 +198,5 @@ module.exports = {
   updateCredit,
   withdraw,
   transfer,
+  filterUsers
 };

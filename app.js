@@ -8,13 +8,19 @@ const {
   updateCredit,
   withdraw,
   transfer,
+  filterUsers,
 } = require("./utils");
 app.use(express.json());
 
 //
-app.get("/users", (req, res) => {
+app.get("/users/", (req, res) => {
   try {
-    res.status(200).send(loadUsers());
+    if (req.query.sorted) {
+      const data = filterUsers();
+      res.status(200).send(data);
+    } else {
+      res.status(200).send(loadUsers());
+    }
   } catch (e) {
     res.status(400).send({ error: e.message });
   }
