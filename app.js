@@ -1,5 +1,10 @@
 const express = require("express");
 const app = express();
+const hbs = require("hbs");
+
+app.set("view engine", "hbs");
+const path = require("path");
+app.use(express.static(path.join(__dirname, "/public")));
 
 const {
   loadUsers,
@@ -13,13 +18,12 @@ const {
 app.use(express.json());
 
 //
-app.get("/users/", (req, res) => {
+app.get("/users", (req, res) => {
   try {
-    if (req.query.sorted) {
-      const data = filterUsers();
-      res.status(200).send(data);
+    if (req.params.sorted) {
+      res.status.send(filterUsers());
     } else {
-      res.status(200).send(loadUsers());
+      res.status(200).render("index", { users: loadUsers() });
     }
   } catch (e) {
     res.status(400).send({ error: e.message });
