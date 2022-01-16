@@ -85,9 +85,9 @@ app.delete("/users/:id", (req, res) => {});
 
 // const PORT = 3000; BEFORE HEROKU
 const PORT = process.env.PORT || 3000
-const host = "localhost";
+// const host = "localhost";
 
 
-app.listen(PORT, host, () => {
-  console.log(`Listening on port: http://${host}:${PORT}`);
+app.listen(PORT,() => {
+  console.log(`Listening on port: ${PORT}`);
 });
