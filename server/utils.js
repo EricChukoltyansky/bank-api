@@ -1,8 +1,9 @@
 const fs = require("fs");
+const fsp = require("fs").promises;
 
-const loadUsers = (id = undefined) => {
+const loadUsers = async (id = undefined) => {
   try {
-    const dataBuffer = fs.readFileSync("./db/users.json");
+    const dataBuffer = await fsp.readFile("./db/users.json");
     const dataJSON = dataBuffer.toString();
     const users = JSON.parse(dataJSON);
     if (!id) {
@@ -56,7 +57,7 @@ const depositCash = (id, newAmount) => {
     const users = loadUsers();
     // console.log(user);
     const sumCash = user.cash + newAmount.cash;
-    console.log("sumCash", sumCash);
+    // console.log("sumCash", sumCash);
     const updatedUser = users.map((account) => {
       if (account.id === +id) {
         return validateInputs({
@@ -198,5 +199,5 @@ module.exports = {
   updateCredit,
   withdraw,
   transfer,
-  filterUsers
+  filterUsers,
 };

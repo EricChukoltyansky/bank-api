@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 const hbs = require("hbs");
 
-app.set("view engine", "hbs");
-const path = require("path");
-app.use(express.static(path.join(__dirname, "/public")));
+// app.set("view engine", "hbs");
+// const path = require("path");
+// app.use(express.static(path.join(__dirname, "/public")));
 
 const {
   loadUsers,
@@ -18,15 +18,15 @@ const {
 app.use(express.json());
 
 //
-app.get("/users", (req, res) => {
+app.get("/users", async (req, res) => {
   try {
     if (req.params.sorted) {
       res.status.send(filterUsers());
     } else {
-      res.status(200).render("index", { users: loadUsers() });
+      res.status(200).send(await loadUsers());
     }
   } catch (e) {
-    res.status(400).send({ error: e.message });
+    res.status(400).send({ error: e.message }); //"Unspecified error" });
   }
 });
 

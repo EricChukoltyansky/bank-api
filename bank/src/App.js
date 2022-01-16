@@ -2,13 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 function App() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     fetch("/users")
       .then((res) => res.json())
       .then((serverData) => setData(serverData));
-  });
+  },[]);
 
   const renderData = () => {
     console.log(data);
