@@ -10,7 +10,7 @@
   "main": "app.js",
   "devDependencies": {},
   "scripts": {
-    "start": "node src/app.js"
+    "start": "node server/app.js"
   },
   "keywords": [],
   "author": "",
