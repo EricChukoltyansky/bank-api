@@ -4,5 +4,16 @@
     "express-handlebars": "^6.0.2",
     "hbs": "^4.2.0",
     "nodemon": "^2.0.15"
-  }
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
